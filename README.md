@@ -21,39 +21,50 @@ A GitHub Action that compiles [Ring](https://ring-lang.net/) Programming Languag
 
 ## Platform & Architecture Support
 
-| Platform | Architecture | Supported | Notes |
-|----------|--------------|-----------|--------|
-| Linux | x64 | ✅ | Full support |
-| Linux | x86 | ❌ | Not supported |
-| Linux | ARM64 | ✅ | Full support |
-| Linux | RISCV64 | ❌ | Not supported |
-| macOS | Intel | ✅ | Full support |
-| macOS | Apple Silicon | ❌ | Not supported |
-| Windows | x64 | ✅ | Pre-built binaries only |
-| Windows | x86 | ❌ | Not supported |
-| Windows | ARM64 | ❌ | Not supported |
+| Platform | Architecture      | Supported | Notes                        |
+|----------|------------------|-----------|------------------------------|
+| Linux    | x86_64 / amd64   | ✅        | Full support                 |
+| Linux    | arm64            | ✅        | Full support                 |
+| Linux    | i386             | ❌        | Not supported                |
+| Linux    | riscv64          | ❌        | Not supported                |
+| macOS    | Intel (x86_64)   | ✅        | Full support                 |
+| macOS    | Apple Silicon    | ✅        | Full support      |
+| Windows  | x86_64 / amd64   | ✅        | Pre-built binaries only      |
+| Windows  | i386 / x86       | ✅        | Pre-built binaries only      |
+| Windows  | arm64            | ❌        | Not supported                |
 
 ## Inputs
 
 | Input | Required | Default | Description |
 |-------|----------|---------|-------------|
-| `file` | ✅ | - | Path to the Ring source file to build |
+| `file` | ❌ | - | Path to the Ring source file to build |
+| `command` | ❌ | - | Custom command to execute |
 | `output_exe` | ❌ | `false` | Set to `true` to generate an executable using Ring2EXE |
 | `args` | ❌ | - | Additional arguments to pass to Ring or Ring2EXE |
 | `ring_packages` | ❌ | - | Space-separated list of packages to install from RingPM |
-| `version` | ❌ | `v1.21.2` | Ring compiler version to use |
+| `version` | ❌ | `v1.24` | Ring compiler version to use |
+| `arch` | ❌ | `x64` | Target architecture for MSVC compiler on Windows (`x64`, `x86`, `arm64`) |
+| `cache` | ❌ | `true` | Set to `false` to disable caching of the Ring installation |
 
 ## Usage Examples
 
 ### Simple example 
+ 
+ ```yaml
+ uses: ysdragon/ring-action@v1.3.0
+ with:
+   file: "program.ring"
+ ```
+
+### Execution command example
 
 ```yaml
-uses: ysdragon/ring-action@v1.0.3
+uses: ysdragon/ring-action@v1.3.0
 with:
-  file: "program.ring"
+  command: "ring program.ring"
 ```
-
-### Linux
+ 
+ ### Linux
 
 ```yaml
 name: Linux Build
@@ -65,26 +76,44 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Linux executable
-        uses: ysdragon/ring-action@v1.0.3
+        uses: ysdragon/ring-action@v1.3.0
         with:
           file: "program.ring"
           output_exe: "true"
           args: "-static"
 ```
 
-### macOS
+### macOS (Apple Silicon)
 
 ```yaml
-name: macOS Intel Build
+name: macOS (Apple Silicon) Build
 on: [push]
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build macOS Intel app
-        uses: ysdragon/ring-action@v1.0.3
+        uses: ysdragon/ring-action@v1.3.0
+        with:
+          file: "program.ring"
+          output_exe: "true"
+```
+
+### macOS (Intel)
+
+```yaml
+name: macOS (Intel) Build
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build macOS Intel app
+        uses: ysdragon/ring-action@v1.3.0
         with:
           file: "program.ring"
           output_exe: "true"
@@ -102,11 +131,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Windows x64 executable
-        uses: ysdragon/ring-action@v1.0.3
+        uses: ysdragon/ring-action@v1.3.0
         with:
           file: "program.ring"
           output_exe: "true"
           args: "-static"
+```
+
+### Windows (32-bit)
+
+```yaml
+name: Windows x86 Build
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Windows x86 executable
+        uses: ysdragon/ring-action@v1.3.0
+        with:
+          file: "program.ring"
+          output_exe: "true"
+          arch: "x86"
 ```
 
 ### Cross-Platform Build
@@ -119,16 +167,20 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-12]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Build Ring project
-        uses: ysdragon/ring-action@v1.0.3
+        uses: ysdragon/ring-action@v1.3.0
         with:
           file: "program.ring"
           output_exe: "true"
 ```
+
+## TODO
+- [ ] Support FreeBSD
+- [ ] Make the project a JavaScript Action
 
 ## License
 This project is open source and available under the [MIT](https://github.com/ysdragon/ring-action/blob/main/LICENSE) License.
