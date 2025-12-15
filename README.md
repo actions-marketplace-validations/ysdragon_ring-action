@@ -27,6 +27,7 @@ A GitHub Action that compiles [Ring](https://ring-lang.net/) Programming Languag
 | Linux    | arm64            | ✅        | Full support                 |
 | Linux    | i386             | ❌        | Not supported                |
 | Linux    | riscv64          | ❌        | Not supported                |
+| Linux    | loongarch64      | ❌        | Not supported                |
 | macOS    | Intel (x86_64)   | ✅        | Full support                 |
 | macOS    | Apple Silicon    | ✅        | Full support      |
 | Windows  | x86_64 / amd64   | ✅        | Pre-built binaries only      |
@@ -37,7 +38,7 @@ A GitHub Action that compiles [Ring](https://ring-lang.net/) Programming Languag
 
 | Input | Required | Default | Description |
 |-------|----------|---------|-------------|
-| `file` | ❌ | - | Path to the Ring source file to build |
+| `file` | ❌ | - | Path to the Ring source file to run/build |
 | `command` | ❌ | - | Custom command to execute |
 | `output_exe` | ❌ | `false` | Set to `true` to generate an executable using Ring2EXE |
 | `args` | ❌ | - | Additional arguments to pass to Ring or Ring2EXE |
@@ -51,7 +52,7 @@ A GitHub Action that compiles [Ring](https://ring-lang.net/) Programming Languag
 ### Simple example 
  
  ```yaml
- uses: ysdragon/ring-action@v1.3.0
+ uses: ysdragon/ring-action@v1.3.2
  with:
    file: "program.ring"
  ```
@@ -59,7 +60,7 @@ A GitHub Action that compiles [Ring](https://ring-lang.net/) Programming Languag
 ### Execution command example
 
 ```yaml
-uses: ysdragon/ring-action@v1.3.0
+uses: ysdragon/ring-action@v1.3.2
 with:
   command: "ring program.ring"
 ```
@@ -76,7 +77,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Linux executable
-        uses: ysdragon/ring-action@v1.3.0
+        uses: ysdragon/ring-action@v1.3.2
         with:
           file: "program.ring"
           output_exe: "true"
@@ -95,7 +96,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build macOS Intel app
-        uses: ysdragon/ring-action@v1.3.0
+        uses: ysdragon/ring-action@v1.3.2
         with:
           file: "program.ring"
           output_exe: "true"
@@ -113,7 +114,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build macOS Intel app
-        uses: ysdragon/ring-action@v1.3.0
+        uses: ysdragon/ring-action@v1.3.2
         with:
           file: "program.ring"
           output_exe: "true"
@@ -131,7 +132,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Windows x64 executable
-        uses: ysdragon/ring-action@v1.3.0
+        uses: ysdragon/ring-action@v1.3.2
         with:
           file: "program.ring"
           output_exe: "true"
@@ -150,7 +151,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Windows x86 executable
-        uses: ysdragon/ring-action@v1.3.0
+        uses: ysdragon/ring-action@v1.3.2
         with:
           file: "program.ring"
           output_exe: "true"
@@ -172,7 +173,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Ring project
-        uses: ysdragon/ring-action@v1.3.0
+        uses: ysdragon/ring-action@v1.3.2
         with:
           file: "program.ring"
           output_exe: "true"
