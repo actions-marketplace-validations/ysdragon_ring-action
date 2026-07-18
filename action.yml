@@ -23,7 +23,7 @@ inputs:
   version:
     description: 'Specify the version of the Ring compiler to use (commit ID, tag, branch, or hash)'
     required: false
-    default: 'v1.25'
+    default: 'v1.27'
   arch:
     description: 'Target architecture for MSVC compiler on Windows (x64, x86, arm64)'
     required: false
@@ -256,11 +256,8 @@ runs:
           if ("${{ env.OUTPUT_EXE }}" -eq "true") {
             ring2exe ${{ env.RING_ARGS }} $scriptBase
           } else {
-            $output = ring ${{ env.RING_ARGS }} $scriptBase
-            Write-Output $output
-            if ($output -match "Error") {
-              exit 1
-            }
+            ring ${{ env.RING_ARGS }} $scriptBase
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
         } finally {
           Pop-Location
@@ -281,11 +278,7 @@ runs:
         if [ "${{ env.OUTPUT_EXE }}" = "true" ]; then
           ring2exe ${{ env.RING_ARGS }} "$SCRIPT_BASE"
         else
-          output=$(ring ${{ env.RING_ARGS }} "$SCRIPT_BASE")
-          echo "$output"
-          if [[ "$output" == *"Error"* ]]; then
-            exit 1
-          fi
+          ring ${{ env.RING_ARGS }} "$SCRIPT_BASE"
         fi
         popd > /dev/null
       elif [ -n "${{ env.RING_COMMAND }}" ]; then
